@@ -7,6 +7,7 @@ const App = () => {
   const [searchVal, setSearchVal] = useState("");
   const [countries, setCountries] = useState([]);
 
+  //handles selecting an individual country by clicking the show button
   const [selCountry, setSelCountry] = useState(null);
 
   useEffect(() => {
@@ -17,6 +18,7 @@ const App = () => {
 
   const handleSearchVal = (event) => {
     setSearchVal(event.target.value);
+    //when changing search query, reset the selected country
     setSelCountry(null);
   };
 
