@@ -14,13 +14,28 @@ const PersonForm = ({ persons, setPersons }) => {
 
   const addNumber = (event) => {
     event.preventDefault();
-    if (persons.findIndex((person) => person.name === newName) === -1) {
+    const id = persons.findIndex((person) => person.name === newName);
+
+    if (id === -1) {
       personService.create(newName, newNumber).then((person) => {
         setPersons(persons.concat(person));
         setNewName("");
         setNewNumber("");
       });
-    } else alert(`${newName} is already added to phonebook`);
+    } else if (
+      window.confirm(
+        `${newName} is already added to phonebook. replace the old number with a new one?`
+      )
+    ) {
+      const editedPerson = {
+        ...persons[id],
+        number: newNumber,
+      };
+      personService.edit(id + 1, editedPerson).then(() => {
+        const newPersons = persons.filter((person) => person.id !== id + 1);
+        setPersons(newPersons.concat(editedPerson));
+      });
+    }
   };
 
   return (

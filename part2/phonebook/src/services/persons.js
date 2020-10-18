@@ -13,6 +13,9 @@ const create = (newName, newNumber) =>
     .then((resp) => resp.data);
 
 const deleteOne = (id) =>
-  axios.delete(`http://localhost:3001/persons/${id}`).then((resp) => resp.data);
+  axios.delete(`${baseUrl}/${id}`).then((resp) => resp.data);
 
-export default { getAll, create, deleteOne };
+const edit = (id, newPerson) =>
+  axios.put(`${baseUrl}/${id}`, newPerson).then((resp) => resp.data);
+
+export default { getAll, create, deleteOne, edit };
