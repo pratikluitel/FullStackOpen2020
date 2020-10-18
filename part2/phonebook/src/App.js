@@ -3,10 +3,12 @@ import personService from "./services/persons";
 import SearchFilter from "./Components/SearchFilter";
 import Person from "./Components/Person";
 import PersonForm from "./Components/PersonForm";
+import Message from "./Components/Message";
+import "./index.css";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
-
+  const [message, setMessage] = useState(null);
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
@@ -29,8 +31,13 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <SearchFilter filter={filter} handleNewFilter={handleNewFilter} />
+      <Message message={message} setMessage={setMessage} />
       <h2>Add a new</h2>
-      <PersonForm persons={persons} setPersons={setPersons} />
+      <PersonForm
+        persons={persons}
+        setPersons={setPersons}
+        setMessage={setMessage}
+      />
 
       <h2>Numbers</h2>
       {displayedPersons.map((person) => (
