@@ -10,6 +10,7 @@ const App = () => {
   const [persons, setPersons] = useState([]);
   const [message, setMessage] = useState(null);
   const [filter, setFilter] = useState("");
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     personService.getAll().then((persons) => {
@@ -27,16 +28,18 @@ const App = () => {
       : persons.filter((person) =>
           person.name.toLowerCase().includes(filter.toLowerCase())
         );
+
   return (
     <div>
       <h2>Phonebook</h2>
       <SearchFilter filter={filter} handleNewFilter={handleNewFilter} />
-      <Message message={message} setMessage={setMessage} />
+      <Message message={message} setMessage={setMessage} error={error} />
       <h2>Add a new</h2>
       <PersonForm
         persons={persons}
         setPersons={setPersons}
         setMessage={setMessage}
+        setError={setError}
       />
 
       <h2>Numbers</h2>
