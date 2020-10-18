@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import personService from "./services/persons";
 import SearchFilter from "./Components/SearchFilter";
 import Person from "./Components/Person";
 import PersonForm from "./Components/PersonForm";
@@ -10,8 +10,8 @@ const App = () => {
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((resp) => {
-      setPersons(resp.data);
+    personService.getAll().then((persons) => {
+      setPersons(persons);
     });
   }, []);
 
@@ -34,7 +34,12 @@ const App = () => {
 
       <h2>Numbers</h2>
       {displayedPersons.map((person) => (
-        <Person key={person.name} person={person} />
+        <Person
+          key={person.id}
+          person={person}
+          persons={persons}
+          setPersons={setPersons}
+        />
       ))}
     </div>
   );
