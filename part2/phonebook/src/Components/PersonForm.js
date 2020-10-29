@@ -44,8 +44,9 @@ const PersonForm = ({ persons, setPersons, setMessage, setError }) => {
         .catch((err) => {
           setError(true);
           setMessage(
-            `Information of ${editedPerson.name} has already been removed from the server.`
+            `Information of ${editedPerson.name} has already been removed from the server`
           );
+          console.log(err);
         });
     }
   };
