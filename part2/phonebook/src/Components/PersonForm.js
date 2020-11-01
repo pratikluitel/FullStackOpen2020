@@ -14,9 +14,9 @@ const PersonForm = ({ persons, setPersons, setMessage, setError }) => {
 
   const addNumber = (event) => {
     event.preventDefault();
-    const id = persons.findIndex((person) => person.name === newName);
+    let editedPerson = persons.find((person) => person.name === newName);
 
-    if (id === -1) {
+    if (!editedPerson) {
       personService.create(newName, newNumber).then((person) => {
         setPersons(persons.concat(person));
         setError(false);
@@ -29,14 +29,16 @@ const PersonForm = ({ persons, setPersons, setMessage, setError }) => {
         `${newName} is already added to phonebook. replace the old number with a new one?`
       )
     ) {
-      const editedPerson = {
-        ...persons[id],
+      editedPerson = {
+        ...editedPerson,
         number: newNumber,
       };
       personService
-        .edit(id + 1, editedPerson)
+        .edit(editedPerson.id, editedPerson)
         .then(() => {
-          const newPersons = persons.filter((person) => person.id !== id + 1);
+          const newPersons = persons.filter(
+            (person) => person.id !== editedPerson.id
+          );
           setPersons(newPersons.concat(editedPerson));
           setError(false);
           setMessage(`Changed ${editedPerson.name}`);
