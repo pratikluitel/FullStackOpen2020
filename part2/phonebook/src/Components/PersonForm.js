@@ -17,13 +17,19 @@ const PersonForm = ({ persons, setPersons, setMessage, setError }) => {
     let editedPerson = persons.find((person) => person.name === newName);
 
     if (!editedPerson) {
-      personService.create(newName, newNumber).then((person) => {
-        setPersons(persons.concat(person));
-        setError(false);
-        setMessage(`Added ${newName}`);
-        setNewName("");
-        setNewNumber("");
-      });
+      personService
+        .create(newName, newNumber)
+        .then((person) => {
+          setPersons(persons.concat(person));
+          setError(false);
+          setMessage(`Added ${newName}`);
+          setNewName("");
+          setNewNumber("");
+        })
+        .catch((err) => {
+          setError(true);
+          setMessage(`Error: ${err.response.data.data}`);
+        });
     } else if (
       window.confirm(
         `${newName} is already added to phonebook. replace the old number with a new one?`
@@ -48,7 +54,6 @@ const PersonForm = ({ persons, setPersons, setMessage, setError }) => {
           setMessage(
             `Information of ${editedPerson.name} has already been removed from the server`
           );
-          console.log(err);
         });
     }
   };
