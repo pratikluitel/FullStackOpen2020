@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import Blog from "./components/Blog";
 import blogService from "./services/blogs";
 import loginService from "./services/loginService";
+import "./index.css";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [message, setMessage] = useState(null);
   const [user, setUser] = useState(null);
 
   const [title, setTitle] = useState("");
@@ -36,8 +38,10 @@ const App = () => {
       setUsername("");
       setPassword("");
     } catch (exception) {
-      setErrorMessage("Wrong credentials");
+      setMessage("Error: Wrong username or password");
+      setErrorMessage("Error: Wrong username or password");
       setTimeout(() => {
+        setMessage(null);
         setErrorMessage(null);
       }, 5000);
     }
@@ -49,38 +53,62 @@ const App = () => {
       setTitle("");
       setUrl("");
       setAuthor("");
+      setMessage(`a new blog ${title} by ${author} added`);
       setErrorMessage(null);
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
     } catch (exception) {
-      console.log(errorMessage);
-      setErrorMessage("cant add");
+      setMessage(
+        `Error: ` + exception.response.data.error
+          ? exception.response.data.error
+          : exception.message
+      );
+      setErrorMessage(
+        `Error: ` + exception.response.data.error
+          ? exception.response.data.error
+          : exception.message
+      );
+      setTimeout(() => {
+        setMessage(null);
+        setErrorMessage(null);
+      }, 5000);
     }
   };
 
   const loginForm = () => (
-    <form onSubmit={handleLogin}>
-      <h2>Login to application</h2>{" "}
-      <div>
-        {" "}
-        username{" "}
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />{" "}
-      </div>{" "}
-      <div>
-        {" "}
-        password{" "}
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />{" "}
-      </div>{" "}
-      <button type="submit">login</button>{" "}
-    </form>
+    <>
+      <h2>Login to application</h2>
+
+      {message === null ? null : errorMessage === null ? (
+        <div className="success">{message}</div>
+      ) : (
+        <div className="error">{message}</div>
+      )}
+      <form onSubmit={handleLogin}>
+        <div>
+          {" "}
+          username{" "}
+          <input
+            type="text"
+            value={username}
+            name="Username"
+            onChange={({ target }) => setUsername(target.value)}
+          />{" "}
+        </div>{" "}
+        <div>
+          {" "}
+          password{" "}
+          <input
+            type="password"
+            value={password}
+            name="Password"
+            onChange={({ target }) => setPassword(target.value)}
+          />{" "}
+        </div>{" "}
+        <button type="submit">login</button>{" "}
+      </form>
+    </>
   );
 
   const blogList = () => (
@@ -98,6 +126,11 @@ const App = () => {
           logout
         </button>
       </p>
+      {message === null ? null : errorMessage === null ? (
+        <div className="success">{message}</div>
+      ) : (
+        <div className="error">{message}</div>
+      )}
       <h2>create new</h2>
       <form onSubmit={handleSubmit}>
         <div>
