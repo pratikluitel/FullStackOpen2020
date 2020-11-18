@@ -13,12 +13,17 @@ const BlogList = ({
   setUser,
 }) => {
   const [blogs, setBlogs] = useState([]);
+  const [refetch, setRefetch] = useState([]);
 
   const blogFormRef = useRef();
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
-  }, [message]);
+  }, [message, refetch]);
+
+  const toggleRefetch = () => {
+    setRefetch(!refetch);
+  };
 
   return (
     <>
@@ -50,7 +55,7 @@ const BlogList = ({
       </Togglable>
 
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} toggleRefetch={toggleRefetch} />
       ))}
     </>
   );

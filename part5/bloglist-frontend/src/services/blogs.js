@@ -18,4 +18,9 @@ const add = async (info) => {
   return resp.data;
 };
 
-export default { getAll, add, setToken };
+const edit = async (info, id) => {
+  const resp = await axios.put(baseUrl + `/${id}`, info);
+  return resp.data;
+};
+
+export default { getAll, add, edit, setToken };
