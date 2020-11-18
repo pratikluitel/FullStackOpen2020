@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import blogService from "../services/blogs";
-const Blog = ({ blog, toggleRefetch }) => {
+const Blog = ({ name, blog, toggleRefetch }) => {
   const [toggleDetails, setToggleDetails] = useState(false);
 
   const blogStyle = {
@@ -37,6 +37,7 @@ const Blog = ({ blog, toggleRefetch }) => {
     }
   };
 
+  const creator = blog.user ? blog.user.name : undefined;
   return (
     <div style={blogStyle}>
       <div>
@@ -53,10 +54,14 @@ const Blog = ({ blog, toggleRefetch }) => {
             like
           </button>
         </p>
-        <p>{blog.user ? blog.user.name : ""}</p>
-        <button type="button" onClick={handleRemove}>
-          remove
-        </button>
+        <p>{creator}</p>
+        {creator === name ? (
+          <button type="button" onClick={handleRemove}>
+            remove
+          </button>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );

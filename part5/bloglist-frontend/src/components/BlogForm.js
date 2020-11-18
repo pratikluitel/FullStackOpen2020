@@ -21,12 +21,12 @@ const BlogForm = ({ setErrorMessage, setMessage, blogFormRef }) => {
       }, 5000);
     } catch (exception) {
       setMessage(
-        `Error: ` + exception.response.data.error
+        "Error: " + exception.response.data.error
           ? exception.response.data.error
           : exception.message
       );
       setErrorMessage(
-        `Error: ` + exception.response.data.error
+        "Error: " + exception.response.data.error
           ? exception.response.data.error
           : exception.message
       );

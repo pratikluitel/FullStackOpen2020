@@ -55,7 +55,12 @@ const BlogList = ({
       </Togglable>
 
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} toggleRefetch={toggleRefetch} />
+        <Blog
+          key={blog.id}
+          name={user.name}
+          blog={blog}
+          toggleRefetch={toggleRefetch}
+        />
       ))}
     </>
   );
