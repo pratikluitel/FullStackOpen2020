@@ -23,4 +23,10 @@ const edit = async (info, id) => {
   return resp.data;
 };
 
-export default { getAll, add, edit, setToken };
+const remove = async (id) => {
+  await axios.delete(baseUrl + `/${id}`, {
+    headers: { Authorization: token },
+  });
+};
+
+export default { getAll, add, edit, remove, setToken };

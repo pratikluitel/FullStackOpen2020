@@ -29,6 +29,14 @@ const Blog = ({ blog, toggleRefetch }) => {
     toggleRefetch();
   };
 
+  const handleRemove = async () => {
+    const id = blog.id;
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      await blogService.remove(id);
+      toggleRefetch();
+    }
+  };
+
   return (
     <div style={blogStyle}>
       <div>
@@ -46,6 +54,9 @@ const Blog = ({ blog, toggleRefetch }) => {
           </button>
         </p>
         <p>{blog.user ? blog.user.name : ""}</p>
+        <button type="button" onClick={handleRemove}>
+          remove
+        </button>
       </div>
     </div>
   );
