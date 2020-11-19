@@ -21,4 +21,7 @@ test("event handler is called correctly when new blog is created", () => {
   });
   fireEvent.submit(form);
   expect(submit.mock.calls).toHaveLength(1);
+  expect(submit.mock.calls[0][0]).toBe("Title");
+  expect(submit.mock.calls[0][1]).toBe("Author");
+  expect(submit.mock.calls[0][2]).toBe("url.com");
 });
