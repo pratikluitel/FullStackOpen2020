@@ -40,13 +40,13 @@ const Blog = ({ name, blog, toggleRefetch }) => {
   const creator = blog.user ? blog.user.name : undefined;
   return (
     <div style={blogStyle}>
-      <div>
+      <div className="blog">
         {blog.title} {blog.author}{" "}
         <button type="button" onClick={showAll}>
           {toggleDetails ? "hide" : "view"}
         </button>
       </div>
-      <div style={disp}>
+      <div style={disp} className="bloginfo">
         <p>{blog.url}</p>
         <p>
           likes {blog.likes}
