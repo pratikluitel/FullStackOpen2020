@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import blogService from "../services/blogs";
-const Blog = ({ name, blog, toggleRefetch }) => {
+const Blog = ({ name, blog, toggleRefetch, handleLike }) => {
   const [toggleDetails, setToggleDetails] = useState(false);
 
   const blogStyle = {
@@ -14,19 +14,6 @@ const Blog = ({ name, blog, toggleRefetch }) => {
 
   const showAll = () => {
     setToggleDetails(!toggleDetails);
-  };
-
-  const handleLike = async () => {
-    const info = {
-      user: blog.user ? blog.user.id : undefined,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url,
-      likes: blog.likes + 1,
-    };
-    const id = blog.id;
-    await blogService.edit(info, id);
-    toggleRefetch();
   };
 
   const handleRemove = async () => {
@@ -50,7 +37,7 @@ const Blog = ({ name, blog, toggleRefetch }) => {
         <p>{blog.url}</p>
         <p>
           likes {blog.likes}
-          <button type="button" onClick={handleLike}>
+          <button type="button" onClick={() => handleLike(blog)}>
             like
           </button>
         </p>

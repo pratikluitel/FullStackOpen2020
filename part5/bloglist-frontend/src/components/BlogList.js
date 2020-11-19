@@ -25,6 +25,47 @@ const BlogList = ({
     setRefetch(!refetch);
   };
 
+  const handleSubmit = async (title, author, url, event) => {
+    blogFormRef.current.toggleVisibility();
+    event.preventDefault();
+    try {
+      await blogService.add({ title: title, author: author, url: url });
+      setMessage(`a new blog ${title} by ${author} added`);
+      setErrorMessage(null);
+      setTimeout(() => {
+        setMessage(null);
+      }, 5000);
+    } catch (exception) {
+      setMessage(
+        "Error: " + exception.response.data.error
+          ? exception.response.data.error
+          : exception.message
+      );
+      setErrorMessage(
+        "Error: " + exception.response.data.error
+          ? exception.response.data.error
+          : exception.message
+      );
+      setTimeout(() => {
+        setMessage(null);
+        setErrorMessage(null);
+      }, 5000);
+    }
+  };
+
+  const handleLike = async (blog) => {
+    const info = {
+      user: blog.user ? blog.user.id : undefined,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url,
+      likes: blog.likes + 1,
+    };
+    const id = blog.id;
+    await blogService.edit(info, id);
+    toggleRefetch();
+  };
+
   return (
     <>
       <h2>blogs</h2>
@@ -47,11 +88,7 @@ const BlogList = ({
       )}
 
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-        <BlogForm
-          setErrorMessage={setErrorMessage}
-          setMessage={setMessage}
-          blogFormRef={blogFormRef}
-        />
+        <BlogForm handleSubmit={handleSubmit} />
       </Togglable>
 
       {blogs.map((blog) => (
@@ -59,7 +96,7 @@ const BlogList = ({
           key={blog.id}
           name={user.name}
           blog={blog}
-          toggleRefetch={toggleRefetch}
+          handleLike={handleLike}
         />
       ))}
     </>

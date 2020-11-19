@@ -32,3 +32,20 @@ describe("rendering <Blog/>", () => {
     expect(hiddiv).toHaveTextContent("blog.comlikes 10");
   });
 });
+
+test("if like is pressed twice, the event handler is called twice", () => {
+  const blog = {
+    title: "Blog A",
+    author: "blog author",
+    url: "blog.com",
+    likes: 10,
+  };
+  const like = jest.fn();
+
+  const component = render(<Blog blog={blog} handleLike={like} />);
+
+  const button = component.getByText("like");
+  fireEvent.click(button);
+  fireEvent.click(button);
+  expect(like.mock.calls).toHaveLength(2);
+});

@@ -1,49 +1,26 @@
 import React, { useState } from "react";
-import blogService from "../services/blogs";
 
-const BlogForm = ({ setErrorMessage, setMessage, blogFormRef }) => {
+const BlogForm = ({ handleSubmit }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
 
-  const handleSubmit = async (event) => {
-    blogFormRef.current.toggleVisibility();
-    event.preventDefault();
-    try {
-      await blogService.add({ title: title, author: author, url: url });
-      setTitle("");
-      setUrl("");
-      setAuthor("");
-      setMessage(`a new blog ${title} by ${author} added`);
-      setErrorMessage(null);
-      setTimeout(() => {
-        setMessage(null);
-      }, 5000);
-    } catch (exception) {
-      setMessage(
-        "Error: " + exception.response.data.error
-          ? exception.response.data.error
-          : exception.message
-      );
-      setErrorMessage(
-        "Error: " + exception.response.data.error
-          ? exception.response.data.error
-          : exception.message
-      );
-      setTimeout(() => {
-        setMessage(null);
-        setErrorMessage(null);
-      }, 5000);
-    }
-  };
   return (
     <>
       <h2>create new</h2>
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={(event) => {
+          setTitle("");
+          setUrl("");
+          setAuthor("");
+          handleSubmit(title, author, url, event);
+        }}
+      >
         <div>
           {" "}
           title{" "}
           <input
+            id="title"
             type="text"
             value={title}
             name="Title"
@@ -54,6 +31,7 @@ const BlogForm = ({ setErrorMessage, setMessage, blogFormRef }) => {
           {" "}
           author{" "}
           <input
+            id="author"
             type="text"
             value={author}
             name="Author"
@@ -64,9 +42,10 @@ const BlogForm = ({ setErrorMessage, setMessage, blogFormRef }) => {
           {" "}
           url{" "}
           <input
+            id="url"
             type="text"
             value={url}
-            name="Author"
+            name="url"
             onChange={({ target }) => setUrl(target.value)}
           />{" "}
         </div>
