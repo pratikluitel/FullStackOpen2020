@@ -50,11 +50,11 @@ describe("Blog app", function () {
       cy.get("#create").click();
     });
   });
-  describe.only("When blogs are present", function () {
+  describe("When a blog is present", function () {
     beforeEach(function () {
       cy.login({ username: "admin", password: "password" });
-      cy.createBlog({ title: "blog one", author: "b", url: "c" });
-      cy.login({ username: "admin", password: "password" });
+      cy.createBlog({ title: "blog one", author: "b", url: "c", likes: 0 });
+      cy.visit("http://localhost:3000");
     });
 
     it("liking blog works", function () {
@@ -71,6 +71,25 @@ describe("Blog app", function () {
         expect(str).to.eq("Remove blog blog one by b?");
       });
       cy.get(".blog").should("not.exist");
+    });
+  });
+
+  describe.only("When multiple blogs are present", function () {
+    beforeEach(function () {
+      cy.login({ username: "admin", password: "password" });
+      cy.createBlog({ title: "blog one", author: "b", url: "c", likes: 0 });
+      cy.createBlog({ title: "blog two", author: "b", url: "c", likes: 2 });
+      cy.createBlog({ title: "blog three", author: "b", url: "c", likes: 1 });
+      cy.createBlog({ title: "blog four", author: "b", url: "c", likes: 10 });
+      cy.visit("http://localhost:3000");
+    });
+    it("blogs are in order of likes", function () {
+      cy.get(".bloginfo").then((bloginfos) => {
+        cy.wrap(bloginfos[0]).contains("likes 0");
+        cy.wrap(bloginfos[1]).contains("likes 1");
+        cy.wrap(bloginfos[2]).contains("likes 2");
+        cy.wrap(bloginfos[3]).contains("likes 10");
+      });
     });
   });
 });

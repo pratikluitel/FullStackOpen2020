@@ -100,15 +100,17 @@ const BlogList = ({
         <BlogForm handleSubmit={handleSubmit} />
       </Togglable>
 
-      {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          name={user.name}
-          blog={blog}
-          handleLike={handleLike}
-          handleRemove={handleRemove}
-        />
-      ))}
+      {blogs
+        .sort((a, b) => (a.likes > b.likes ? 1 : -1))
+        .map((blog) => (
+          <Blog
+            key={blog.id}
+            name={user.name}
+            blog={blog}
+            handleLike={handleLike}
+            handleRemove={handleRemove}
+          />
+        ))}
     </>
   );
 };
