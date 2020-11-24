@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import blogService from "../services/blogs";
-const Blog = ({ name, blog, toggleRefetch, handleLike }) => {
+
+const Blog = ({ name, blog, handleLike, handleRemove }) => {
   const [toggleDetails, setToggleDetails] = useState(false);
 
   const blogStyle = {
@@ -16,20 +16,12 @@ const Blog = ({ name, blog, toggleRefetch, handleLike }) => {
     setToggleDetails(!toggleDetails);
   };
 
-  const handleRemove = async () => {
-    const id = blog.id;
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      await blogService.remove(id);
-      toggleRefetch();
-    }
-  };
-
   const creator = blog.user ? blog.user.name : undefined;
   return (
     <div style={blogStyle}>
       <div className="blog">
         {blog.title} {blog.author}{" "}
-        <button type="button" onClick={showAll}>
+        <button id="view" type="button" onClick={showAll}>
           {toggleDetails ? "hide" : "view"}
         </button>
       </div>
@@ -37,13 +29,13 @@ const Blog = ({ name, blog, toggleRefetch, handleLike }) => {
         <p>{blog.url}</p>
         <p>
           likes {blog.likes}
-          <button type="button" onClick={() => handleLike(blog)}>
+          <button id="like" type="button" onClick={() => handleLike(blog)}>
             like
           </button>
         </p>
         <p>{creator}</p>
         {creator === name ? (
-          <button type="button" onClick={handleRemove}>
+          <button id="remove" type="button" onClick={() => handleRemove(blog)}>
             remove
           </button>
         ) : (

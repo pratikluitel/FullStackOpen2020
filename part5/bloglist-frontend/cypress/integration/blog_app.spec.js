@@ -1,10 +1,15 @@
 describe("Blog app", function () {
   beforeEach(function () {
     cy.request("POST", "http://localhost:3001/api/testing/reset");
-    cy.request("POST", "http://localhost:3001/api/testing/reset");
-    const user = {
+    let user = {
       name: "Admin",
       username: "admin",
+      password: "password",
+    };
+    cy.request("POST", "http://localhost:3001/api/users/", user);
+    user = {
+      name: "Not Admin",
+      username: "noadmin",
       password: "password",
     };
     cy.request("POST", "http://localhost:3001/api/users/", user);
@@ -32,15 +37,9 @@ describe("Blog app", function () {
       cy.get(".error").should("have.css", "color", "rgb(255, 0, 0)");
     });
   });
-  describe.only("When logged in", function () {
+  describe("When logged in", function () {
     beforeEach(function () {
-      cy.request("POST", "http://localhost:3001/api/login", {
-        username: "admin",
-        password: "password",
-      }).then((response) => {
-        localStorage.setItem("User", JSON.stringify(response.body));
-        cy.visit("http://localhost:3000");
-      });
+      cy.login({ username: "admin", password: "password" });
     });
 
     it("A blog can be created", function () {
@@ -49,6 +48,29 @@ describe("Blog app", function () {
       cy.get("#author").type("author");
       cy.get("#url").type("url");
       cy.get("#create").click();
+    });
+  });
+  describe.only("When blogs are present", function () {
+    beforeEach(function () {
+      cy.login({ username: "admin", password: "password" });
+      cy.createBlog({ title: "blog one", author: "b", url: "c" });
+      cy.login({ username: "admin", password: "password" });
+    });
+
+    it("liking blog works", function () {
+      cy.get("#view").click().get("#like").click();
+      cy.contains("likes 1");
+    });
+    it("deleting blog doesn't work if not done by actual user", function () {
+      cy.login({ username: "noadmin", password: "password" });
+      cy.get("#view").click().get("#remove").should("not.exist");
+    });
+    it("deleting blog works if done by actual user", function () {
+      cy.get("#view").click().get("#remove").click();
+      cy.on("window:confirm", (str) => {
+        expect(str).to.eq("Remove blog blog one by b?");
+      });
+      cy.get(".blog").should("not.exist");
     });
   });
 });

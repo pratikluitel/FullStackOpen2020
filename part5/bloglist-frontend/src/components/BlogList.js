@@ -66,6 +66,14 @@ const BlogList = ({
     await blogService.edit(info, id);
     toggleRefetch();
   };
+  const handleRemove = async (blog) => {
+    blogService.setToken(user.token);
+    const id = blog.id;
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      await blogService.remove(id);
+      toggleRefetch();
+    }
+  };
 
   return (
     <>
@@ -98,6 +106,7 @@ const BlogList = ({
           name={user.name}
           blog={blog}
           handleLike={handleLike}
+          handleRemove={handleRemove}
         />
       ))}
     </>
