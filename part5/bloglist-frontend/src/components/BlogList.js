@@ -29,6 +29,7 @@ const BlogList = ({
     blogFormRef.current.toggleVisibility();
     event.preventDefault();
     try {
+      blogService.setToken(user.token);
       await blogService.add({ title: title, author: author, url: url });
       setMessage(`a new blog ${title} by ${author} added`);
       setErrorMessage(null);
