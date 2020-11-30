@@ -85,6 +85,7 @@ describe("Blog app", function () {
     });
     it("blogs are in order of likes", function () {
       cy.get(".bloginfo").then((bloginfos) => {
+        console.log(bloginfos);
         cy.wrap(bloginfos[0]).contains("likes 0");
         cy.wrap(bloginfos[1]).contains("likes 1");
         cy.wrap(bloginfos[2]).contains("likes 2");
